@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",                // 👈 root folder of the whole project
+    "paths": {
+      "@/*": ["*"]                // 👈 allows @/context, @/app, @/utils etc.
+    }
+  }
+}
