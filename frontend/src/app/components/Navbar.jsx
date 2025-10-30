@@ -1,21 +1,32 @@
 "use client";
-import { useAuth } from "@/context/AuthContext";
-import { useCart } from "@/context/CartContext"; 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaShoppingCart, FaUserCircle } from "react-icons/fa";
+import { useSelector, useDispatch } from "react-redux";
+import { logoutUser, checkAuth } from "@/src/features/auth/authSlice";
+import { fetchCart } from "@/src/features/cart/cartSlice";
 
 export default function Navbar() {
-  const { isLoggedIn, logout, user } = useAuth();
-  const { cartCount } = useCart();
+  const dispatch = useDispatch();
   const pathname = usePathname();
   const [openUserMenu, setOpenUserMenu] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
-  // ✨ reusable classes for nav links
+  // ✅ Redux state
+  const { isLoggedIn, user } = useSelector((state) => state.auth);
+  const { items: cartItems } = useSelector((state) => state.cart);
+
+  const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
+
+  // ✅ Load auth and cart on mount
+  useEffect(() => {
+    dispatch(checkAuth());
+    dispatch(fetchCart());
+  }, [dispatch]);
+
   const linkClass = (path) =>
     `${pathname === path ? "text-yellow-500 underline underline-offset-8" : "text-black"} 
      hover:text-yellow-500 transition duration-300`;
@@ -27,40 +38,43 @@ export default function Navbar() {
     }
   };
 
+  const handleLogout = () => {
+    dispatch(logoutUser());
+    setOpenUserMenu(false);
+  };
+
   return (
     <motion.nav
       initial={{ opacity: 0, y: -50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
       className="w-[85%] fixed top-8 left-0 right-0 mx-auto 
-                 rounded-full z-50 px-6 pr-8 flex justify-between items-center 
+                 rounded-full z-50 px-3 pr-8 flex justify-between items-center 
                  shadow-md bg-white border border-gray-200"
     >
       {/* Logo */}
-      <Link href="/" className="text-2xl font-extrabold tracking-wide transition duration-300">
+      <Link href="/" className="text-2xl pl-[10px] ml-[20px] font-extrabold tracking-wide transition duration-300">
         <Image src="/logo.png" alt="VIP Dry Fruits Logo" width={65} height={65} />
       </Link>
 
-     
-
       {/* Nav Links */}
-      <div className="flex gap-9 pr-6 items-center text-base">
+      <div className="flex gap-9 pr-6 items-center text-base font-semibold">
         <Link className={linkClass("/")} href="/">Home</Link>
         <Link className={linkClass("/product")} href="/product">Shop</Link>
         <Link className={linkClass("/contactUs")} href="/contactUs">Contact Us</Link>
         <Link className={linkClass("/about")} href="/about">About Us</Link>
 
-         {/* Search Box */}
-      <form onSubmit={handleSearch} className="flex items-center bg-gray-100 rounded-full px-3 py-1">
-        <input
-          type="text"
-          placeholder="Search products..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="bg-transparent outline-none px-2 text-sm text-black"
-        />
-        <button type="submit" className="text-yellow-500 font-semibold">Search</button>
-      </form>
+        {/* Search Box */}
+        <form onSubmit={handleSearch} className="flex items-center bg-gray-100 px-3 py-1 border p-3 rounded-[50px] pl-5 border-yellow-200">
+          <input
+            type="text"
+            placeholder="Search products..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="bg-transparent outline-none px-2 text-sm text-black"
+          />
+          <button type="submit" className="text-yellow-500 font-semibold">Search</button>
+        </form>
 
         {/* Cart Icon */}
         <Link href="/cart" className="relative hover:text-yellow-500 transition duration-300">
@@ -87,7 +101,7 @@ export default function Navbar() {
                 <>
                   <p className="px-4 py-2 text-sm text-gray-700">👤 {user?.name || "User"}</p>
                   <button
-                    onClick={logout}
+                    onClick={handleLogout}
                     className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-100"
                   >
                     Logout

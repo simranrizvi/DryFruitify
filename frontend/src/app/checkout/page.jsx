@@ -48,15 +48,20 @@ export default function CheckoutPage() {
 
     const data = await res.json();
 
-    if(res.ok){
-      alert("Order Placed Successfully!");
-      // Clear cart in backend
-      await fetch('http://localhost:5000/api/cart/clear', { method: 'DELETE', credentials: 'include' });
-      fetchCart(); // refresh cart from backend
-      setCart([]); // Clear cart in frontend immediately
-      setForm(initialForm); // Clear form
-      router.push("/"); // redirect to home
-    } else {
+    if (res.ok) {
+  alert("Order Placed Successfully!");
+  
+  await fetch('http://localhost:5000/api/cart/clear', {
+    method: 'DELETE',
+    credentials: 'include'
+  });
+
+  await fetchCart();   // ✅ wait for cart refresh from backend
+  setCart([]);         // ✅ clear frontend cache too
+  setForm(initialForm);
+  
+  router.push("/");    // ✅ redirect AFTER state updates
+}else {
       alert(data.message || "Failed to place order");
     }
   };

@@ -1,17 +1,31 @@
 "use client";
 
-import { useCart } from "@/context/CartContext";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { FiX } from "react-icons/fi";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import {
+  fetchCart,
+  updateItem,
+  removeItem,
+} from "@/src/features/cart/cartSlice"; // ✅ Redux actions import
 
 export default function CartPage() {
-  const { cart, updateItem, removeItem } = useCart();
+  const dispatch = useDispatch();
   const router = useRouter();
 
-  // ✅ Safe total calc
+  // ✅ Redux state se cart items lao
+  const cart = useSelector((state) => state.cart.items);
+
+  // ✅ Component mount hone pe cart fetch karo
+  useEffect(() => {
+    dispatch(fetchCart());
+  }, [dispatch]);
+
+  // ✅ Total calculate karo safely
   const grandTotal = cart.reduce(
-    (acc, item) => acc + ((item.product?.price || 0) * (item.quantity || 0)),
+    (acc, item) => acc + (item.product?.price || 0) * (item.quantity || 0),
     0
   );
 
@@ -63,7 +77,9 @@ export default function CartPage() {
                         </div>
                       )}
                       <div>
-                        <p className="font-semibold">{item.product?.name || "Unnamed"}</p>
+                        <p className="font-semibold">
+                          {item.product?.name || "Unnamed"}
+                        </p>
                         <p className="text-sm text-gray-500">
                           {item.product?.description || "No description"}
                         </p>
@@ -82,7 +98,12 @@ export default function CartPage() {
                       <button
                         className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300 transition"
                         onClick={() =>
-                          updateItem(item.product?._id, (item.quantity || 1) - 1)
+                          dispatch(
+                            updateItem({
+                              productId: item.product?._id,
+                              quantity: (item.quantity || 1) - 1,
+                            })
+                          )
                         }
                         disabled={(item.quantity || 1) <= 1}
                       >
@@ -92,7 +113,12 @@ export default function CartPage() {
                       <button
                         className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300 transition"
                         onClick={() =>
-                          updateItem(item.product?._id, (item.quantity || 0) + 1)
+                          dispatch(
+                            updateItem({
+                              productId: item.product?._id,
+                              quantity: (item.quantity || 0) + 1,
+                            })
+                          )
                         }
                       >
                         +
@@ -102,13 +128,16 @@ export default function CartPage() {
 
                   {/* Total */}
                   <td className="py-3 px-4 text-center">
-                    ${((item.product?.price || 0) * (item.quantity || 0)).toFixed(2)}
+                    $
+                    {(
+                      (item.product?.price || 0) * (item.quantity || 0)
+                    ).toFixed(2)}
                   </td>
 
                   {/* Remove */}
                   <td className="py-3 px-4 text-center">
                     <button
-                      onClick={() => removeItem(item.product?._id)}
+                      onClick={() => dispatch(removeItem(item.product?._id))}
                       className="text-red-600 hover:text-red-800 transition"
                     >
                       <FiX size={20} />

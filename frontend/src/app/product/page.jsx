@@ -1,12 +1,14 @@
-// app/shop/page.jsx
+// app/product/page.jsx
 import Link from "next/link";
 import ProductCard from "../components/ProductCard";
 
 // 🟢 Fetch products (with filters)
-async function getProducts(keyword = "", category = "") {
+async function getProducts(keyword = "", category = "", minPrice = "", maxPrice = "") {
   let query = "";
   if (keyword) query += `keyword=${keyword}`;
   if (category) query += query ? `&category=${category}` : `category=${category}`;
+  if (minPrice) query += query ? `&minPrice=${minPrice}` : `minPrice=${minPrice}`;
+  if (maxPrice) query += query ? `&maxPrice=${maxPrice}` : `maxPrice=${maxPrice}`;
 
   const res = await fetch(
     `http://localhost:5000/api/products${query ? "?" + query : ""}`,
@@ -31,22 +33,24 @@ async function getCategories() {
   return res.json();
 }
 
-export default async function ShopPage({ searchParams }) {
+export default async function ProductPage({ searchParams }) {
   const params = await searchParams;
   const keyword = params?.keyword || "";
   const category = params?.category || "";
+  const minPrice = params?.minPrice || "";
+  const maxPrice = params?.maxPrice || "";
 
-  const products = await getProducts(keyword, category);
+  const products = await getProducts(keyword, category, minPrice, maxPrice);
   const categories = await getCategories();
 
   return (
-    <div className="bg-gradient-to-b from-white via-amber-50 to-white">
+    <div className="bg-gradient-to-b from-white via-amber-50 to-white ">
       {/* 🔥 Hero Section */}
       <div
-        className="relative h-[55vh] flex flex-col items-center justify-center text-center bg-cover bg-center"
+        className="relative h-[55vh] flex flex-col items-center justify-center text-center bg-cover bg-center pt-25"
         style={{
           backgroundImage:
-            "linear-gradient(to right, rgba(0,0,0,0.6), rgba(0,0,0,0.3)), url('/about.webp')",
+            "linear-gradient(to right, rgba(0,0,0,0.6), rgba(0,0,0,0.3)), url('/shop.png')",
         }}
       >
         <h1 className="text-5xl md:text-6xl font-bold text-white drop-shadow-lg">
@@ -59,63 +63,119 @@ export default async function ShopPage({ searchParams }) {
 
       {/* 🔥 Shop Layout */}
       <div className="min-h-screen w-[90%] mx-auto py-12 flex flex-col md:flex-row gap-10">
-        {/* LEFT - Category Filter */}
-        <div className="md:w-1/4 w-full">
-          <h2 className="font-bold mb-6 text-xl text-gray-800">Categories</h2>
-          <div className="flex flex-wrap gap-3">
-            {categories.map((cat) => (
+        {/* LEFT - Filters */}
+        <div className="md:w-1/4 w-full space-y-8">
+          {/* 🔍 Search Box (Top) */}
+         {/* 🔍 Search Box (Top) */}
+<div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100">
+  <h2 className="font-bold mb-6 text-lg text-gray-800 flex items-center gap-2">
+    <span className="w-1.5 h-6 bg-amber-400 rounded-full"></span>
+    Search
+  </h2>
+  <form action="/product" method="GET" className="flex">
+    <input type="hidden" name="category" value={category} />
+    <input type="hidden" name="minPrice" value={minPrice} />
+    <input type="hidden" name="maxPrice" value={maxPrice} />
+
+    <input
+      type="text"
+      name="keyword"
+      defaultValue={keyword}
+      placeholder="Search products..."
+      className="flex-1 px-2 py-2 border border-gray-300 rounded-l-xl focus:ring-2 focus:ring-amber-400 outline-none text-sm"
+    />
+    <button
+      type="submit"
+      className="px-4 py-2 bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-500 hover:to-yellow-600 text-white rounded-r-xl font-semibold text-sm shadow-md transition-transform hover:scale-105"
+    >
+      Search
+    </button>
+  </form>
+</div>
+
+
+          {/* 🟡 Category Filter */}
+          <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100">
+            <h2 className="font-bold mb-6 text-lg text-gray-800 flex items-center gap-2">
+              <span className="w-1.5 h-6 bg-amber-400 rounded-full"></span>
+              Categories
+            </h2>
+            <div className="flex flex-wrap gap-3">
+              {categories.map((cat) => (
+                <Link
+                  key={cat}
+                  href={`/product?category=${cat}`}
+                  className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300
+                    ${
+                      category === cat
+                        ? "bg-gradient-to-r from-amber-400 to-yellow-500 text-white shadow-md scale-105"
+                        : "bg-gray-100 text-gray-700 hover:bg-gray-200 hover:scale-105"
+                    }`}
+                >
+                  {cat}
+                </Link>
+              ))}
+
+              {/* Clear filter */}
               <Link
-                key={cat}
-                href={`/product?category=${cat}`}
-                className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 shadow-sm
+                href="/product"
+                className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300
                   ${
-                    category === cat
+                    !category
                       ? "bg-gradient-to-r from-amber-400 to-yellow-500 text-white shadow-md scale-105"
                       : "bg-gray-100 text-gray-700 hover:bg-gray-200 hover:scale-105"
                   }`}
               >
-                {cat}
+                All
               </Link>
-            ))}
+            </div>
+          </div>
 
-            {/* Clear filter */}
-            <Link
-              href="/product"
-              className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 shadow-sm
-                ${
-                  !category
-                    ? "bg-gradient-to-r from-amber-400 to-yellow-500 text-white shadow-md scale-105"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200 hover:scale-105"
-                }`}
-            >
-              All
-            </Link>
+          {/* 💰 Price Filter */}
+          <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100">
+            <h2 className="font-bold mb-6 text-lg text-gray-800 flex items-center gap-2">
+              <span className="w-1.5 h-6 bg-amber-400 rounded-full"></span>
+              Price Range
+            </h2>
+            <form action="/product" method="GET" className="flex flex-col gap-4">
+              <input type="hidden" name="keyword" value={keyword} />
+              <input type="hidden" name="category" value={category} />
+
+              <div className="flex items-center gap-3">
+                <input
+                  type="number"
+                  name="minPrice"
+                  placeholder="Min"
+                  defaultValue={minPrice}
+                  className="w-1/2 px-3 py-2 border rounded-xl text-sm focus:ring-2 focus:ring-amber-400 outline-none"
+                />
+                <input
+                  type="number"
+                  name="maxPrice"
+                  placeholder="Max"
+                  defaultValue={maxPrice}
+                  className="w-1/2 px-3 py-2 border rounded-xl text-sm focus:ring-2 focus:ring-amber-400 outline-none"
+                />
+              </div>
+              <button
+                type="submit"
+                className="bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-500 hover:to-yellow-600 text-white font-semibold py-2 text-sm rounded-xl shadow-md transition-transform hover:scale-105"
+              >
+                Apply
+              </button>
+            </form>
           </div>
         </div>
 
         {/* RIGHT - Products */}
         <div className="md:w-3/4 w-full">
-          {/* 🔎 Search Box */}
-          <form
-            action="/product"
-            method="GET"
-            className="flex items-center mb-8 bg-gray-100 rounded-full px-4 py-2 shadow-sm"
-          >
-            <input
-              type="text"
-              name="keyword"
-              defaultValue={keyword}
-              placeholder="Search products..."
-              className="flex-grow bg-transparent outline-none px-2 text-sm text-black"
-            />
-            <button
-              type="submit"
-              className="text-yellow-600 font-semibold hover:text-yellow-700 transition"
-            >
-              Search
-            </button>
-          </form>
 
+          {/* Agar category selected hai to heading show kare */}
+  {category && (
+    <h2 className="text-2xl font-bold text-gray-800 mb-6">
+      {category} Products
+    </h2>
+  )}
           {/* Product Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {products.length > 0 ? (

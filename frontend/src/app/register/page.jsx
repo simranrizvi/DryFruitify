@@ -45,7 +45,7 @@ export default function RegisterPage() {
   return (
     <div
       className="min-h-screen flex items-center justify-center bg-cover bg-center "
-      style={{ backgroundImage: `url('/slider1_1.jpg')` }}
+      style={{ backgroundImage: `url('/hero.png')` }}
     >
       <div className="bg-white/30 bg-opacity-60 p-10 rounded-2xl w-full max-w-md shadow-lg backdrop-blur-lg ">
         <h2 className="text-3xl font-bold text-center text-white mb-6">🆕 Register</h2>
