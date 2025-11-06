@@ -24,7 +24,8 @@ const __dirname = path.dirname(__filename);
 // ✅ Allowed Origins (localhost + future frontend deploy)
 const allowedOrigins = [
   "http://localhost:3000", // local frontend
-  "https://your-frontend.vercel.app", // future deployed frontend
+  "https://khalista-natural.vercel.app",
+  /// future deployed frontend
 ];
 
 // ✅ CORS config
