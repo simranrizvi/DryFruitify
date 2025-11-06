@@ -65,7 +65,7 @@ const OurTeam = () => {
           >
             <div className="bg-amber-400 w-full h-60 flex justify-center items-center">
               <Image
-                src="/1_800x.jpg"
+                src="/"
                 alt="Team Member"
                 width={160}
                 height={160}
@@ -73,8 +73,8 @@ const OurTeam = () => {
               />
             </div>
             <div className="w-60 flex flex-col justify-center items-center my-7">
-              <h2 className="font-bold text-[30px] text-amber-700 mb-5">Syed Mubashir</h2>
-              <p>CEO</p>
+              <h2 className="font-bold text-[30px] text-amber-700 mb-5">Syeda Maheen</h2>
+              <p>Markeeting Head</p>
               <div className="flex gap-4 text-2xl text-amber-700 mt-4">
                 <FaFacebook className="hover:text-blue-600 cursor-pointer" />
                 <FaTwitter className="hover:text-sky-500 cursor-pointer" />
@@ -92,7 +92,7 @@ const OurTeam = () => {
           >
             <div className="bg-amber-400 w-full h-60 flex justify-center items-center">
               <Image
-                src="/3_800x.jpg"
+                src="/"
                 alt="Team Member"
                 width={160}
                 height={160}
@@ -100,7 +100,7 @@ const OurTeam = () => {
               />
             </div>
             <div className="w-60 flex flex-col justify-center items-center my-7">
-              <h2 className="font-bold text-[30px] text-amber-700 mb-5">Syed Mujtaba</h2>
+              <h2 className="font-bold text-[30px] text-amber-700 mb-5">Syed MUhammad Imran</h2>
               <p>Manager</p>
               <div className="flex gap-4 text-2xl text-amber-700 mt-4">
                 <FaFacebook className="hover:text-blue-600 cursor-pointer" />
@@ -119,7 +119,7 @@ const OurTeam = () => {
           >
             <div className="bg-amber-400 w-full h-60 flex justify-center items-center">
               <Image
-                src="/2_800x.jpg"
+                src="/2"
                 alt="Team Member"
                 width={160}
                 height={160}
@@ -127,7 +127,7 @@ const OurTeam = () => {
               />
             </div>
             <div className="w-60 flex flex-col justify-center items-center my-7">
-              <h2 className="font-bold text-[30px] text-amber-700 mb-5">Syed Asim</h2>
+              <h2 className="font-bold text-[30px] text-amber-700 mb-5">Syed Hasnain</h2>
               <p>Product Manager</p>
               <div className="flex gap-4 text-2xl text-amber-700 mt-4">
                 <FaFacebook className="hover:text-blue-600 cursor-pointer" />
@@ -146,7 +146,7 @@ const OurTeam = () => {
           >
             <div className="bg-amber-400 w-full h-60 flex justify-center items-center">
               <Image
-                src="/4_800x.jpg"
+                src="/"
                 alt="Team Member"
                 width={160}
                 height={160}
@@ -154,7 +154,7 @@ const OurTeam = () => {
               />
             </div>
             <div className="w-60 flex flex-col justify-center items-center my-7">
-              <h2 className="font-bold text-[30px] text-amber-700 mb-5">Syeda Asima </h2>
+              <h2 className="font-bold text-[30px] text-amber-700 mb-5">Muhammad Ali </h2>
               <p>customer Support</p>
               <div className="flex gap-4 text-2xl text-amber-700 mt-4">
                 <FaFacebook className="hover:text-blue-600 cursor-pointer" />
