@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { motion } from "framer-motion";
+import api from "@/src/app/lib/axios"; // ✅ central axios instance import
 
 const TopProduct = () => {
   const [products, setProducts] = useState([]);
@@ -9,7 +9,7 @@ const TopProduct = () => {
   useEffect(() => {
     const fetchTopProducts = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/products/top");
+        const res = await api.get("/api/products/top"); // ✅ baseURL handle karega
         setProducts(res.data);
       } catch (err) {
         console.error("Error fetching top products:", err);
@@ -135,7 +135,7 @@ const TopProduct = () => {
               {/* Product Image */}
               <motion.img
                 whileHover={{ scale: 1.05 }}
-                src={`http://localhost:5000${product.image}`}
+                src={`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}${product.image}`} // ✅ dynamic backend image path
                 alt={product.title}
                 className="w-55 h-55 object-cover rounded-lg shadow-md"
               />

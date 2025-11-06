@@ -1,34 +1,26 @@
+// app/product/[id]/page.jsx
 import React from "react";
-import Link from "next/link";
 import ProductCard from "../../components/ProductCard";
+import api from "@/src/app/lib/axios"; // ✅ Axios instance import
 
 // 🟢 Fetch Single Product
 async function getProduct(id) {
-  const res = await fetch(`http://localhost:5000/api/products/${id}`, {
-    cache: "no-store",
-  });
-
-  if (!res.ok) {
-    const errorData = await res.json();
-    throw new Error(errorData.msg || "Failed to fetch product");
+  try {
+    const res = await api.get(`/api/products/${id}`);
+    return res.data;
+  } catch (err) {
+    throw new Error(err.response?.data?.msg || "Failed to fetch product");
   }
-
-  return res.json();
 }
 
 // 🟢 Fetch Related Products (same category)
 async function getRelatedProducts(category, currentId) {
-  const res = await fetch(
-    `http://localhost:5000/api/products?category=${category}`,
-    { cache: "no-store" }
-  );
-
-  if (!res.ok) {
+  try {
+    const res = await api.get(`/api/products?category=${category}`);
+    return res.data.filter((p) => p._id !== currentId);
+  } catch (err) {
     throw new Error("Failed to fetch related products");
   }
-
-  const products = await res.json();
-  return products.filter((p) => p._id !== currentId);
 }
 
 export default async function ProductDetailPage({ params }) {
@@ -40,25 +32,26 @@ export default async function ProductDetailPage({ params }) {
     product._id
   );
 
+  const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+
   return (
     <div className="min-h-screen bg-white text-gray-900">
       {/* 🔥 Hero Section */}
-      {/* 🔥 Hero Section */}
-<div className="w-full bg-white text-center py-12 border-b border-gray-200">
-  <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900">
-    {product.title}
-  </h1>
-  <p className="mt-4 text-2xl font-semibold text-green-600">
-    ${product.price}
-  </p>
-</div>
+      <div className="w-full bg-white text-center py-12 border-b border-gray-200">
+        <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900">
+          {product.title}
+        </h1>
+        <p className="mt-4 text-2xl font-semibold text-green-600">
+          ${product.price}
+        </p>
+      </div>
 
       {/* 🔥 Product Details */}
       <div className="w-[90%] mx-auto py-12 flex flex-col md:flex-row gap-10">
         {/* LEFT - Image */}
         <div className="md:w-1/2 w-full">
           <img
-            src={`http://localhost:5000${product.image}`}
+            src={`${BASE_URL}${product.image}`}
             alt={product.title}
             className="w-full rounded-2xl shadow-md object-cover hover:scale-105 transition-transform duration-300"
           />

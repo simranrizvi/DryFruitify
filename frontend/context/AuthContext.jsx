@@ -1,6 +1,6 @@
-'use client';
-import { createContext, useContext, useState, useEffect } from 'react';
-import axios from '@/utils/api';
+"use client";
+import { createContext, useContext, useState, useEffect } from "react";
+import axios from "@/utils/api";
 
 const AuthContext = createContext();
 
@@ -11,11 +11,11 @@ export const AuthProvider = ({ children }) => {
 
   const checkAuth = async () => {
     try {
-      const res = await axios.get('/api/auth/me', { 
+      const res = await axios.get("/api/auth/me", {
         withCredentials: true,
-        validateStatus: (status) => status === 200 || status === 401
+        validateStatus: (status) => status === 200 || status === 401,
       });
-      
+
       if (res.status === 200) {
         setUser(res.data);
         setIsLoggedIn(true);
@@ -26,7 +26,7 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       // Only log unexpected errors (not 401)
       if (error.response?.status !== 401) {
-        console.error('Authentication check error:', error);
+        console.error("Authentication check error:", error);
       }
       setIsLoggedIn(false);
       setUser(null);
@@ -47,9 +47,9 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await axios.post('/api/auth/logout', {}, { withCredentials: true });
+      await axios.post("/api/auth/logout", {}, { withCredentials: true });
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error("Logout error:", error);
     }
     setUser(null);
     setIsLoggedIn(false);
@@ -57,14 +57,16 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ 
-      isLoggedIn, 
-      user, 
-      login, 
-      logout, 
-      checkAuth,
-      authCheckCompleted
-    }}>
+    <AuthContext.Provider
+      value={{
+        isLoggedIn,
+        user,
+        login,
+        logout,
+        checkAuth,
+        authCheckCompleted,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

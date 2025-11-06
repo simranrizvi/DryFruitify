@@ -47,3 +47,13 @@ export const deleteOrder = async (req, res) => {
     res.status(500).json({ message: 'Failed to delete order', error: error.message });
   }
 };
+
+export const getSalesData = async (req, res) => {
+  try {
+    const orders = await Order.find({});
+    const totalSales = orders.reduce((sum, order) => sum + order.totalPrice, 0);
+    res.json({ totalSales, totalOrders: orders.length });
+  } catch (err) {
+    res.status(500).json({ message: "Error calculating sales" });
+  }
+};

@@ -1,10 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "@/utils/api";
+import api from "@/src/app/lib/axios";// ✅ centralized axios instance
 
 // ✅ Async thunk for checking auth status
 export const checkAuth = createAsyncThunk("auth/checkAuth", async () => {
-  const res = await axios.get("/api/auth/me", {
-    withCredentials: true,
+  const res = await api.get("/api/auth/me", {
     validateStatus: (status) => status === 200 || status === 401,
   });
   if (res.status === 200) return res.data;
@@ -13,7 +12,7 @@ export const checkAuth = createAsyncThunk("auth/checkAuth", async () => {
 
 // ✅ Async thunk for logout
 export const logoutUser = createAsyncThunk("auth/logoutUser", async () => {
-  await axios.post("/api/auth/logout", {}, { withCredentials: true });
+  await api.post("/api/auth/logout");
 });
 
 const authSlice = createSlice({

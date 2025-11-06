@@ -1,29 +1,19 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import api from "@/src/app/lib/axios"; // ✅ centralized axios instance
 
 // ✅ Fetch cart items
 export const fetchCart = createAsyncThunk("cart/fetchCart", async () => {
-  const res = await fetch("http://localhost:5000/api/cart", {
-    credentials: "include",
-  });
-  const data = await res.json();
-  return data?.items || [];
+  const res = await api.get("/api/cart");
+  return res.data?.items || [];
 });
 
 // ✅ Add to cart
 export const addToCart = createAsyncThunk(
   "cart/addToCart",
   async ({ productId, quantity }) => {
-    await fetch("http://localhost:5000/api/cart/add", {
-      method: "POST",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ productId, quantity }),
-    });
-    const res = await fetch("http://localhost:5000/api/cart", {
-      credentials: "include",
-    });
-    const data = await res.json();
-    return data?.items || [];
+    await api.post("/api/cart/add", { productId, quantity });
+    const res = await api.get("/api/cart");
+    return res.data?.items || [];
   }
 );
 
@@ -31,17 +21,9 @@ export const addToCart = createAsyncThunk(
 export const updateItem = createAsyncThunk(
   "cart/updateItem",
   async ({ productId, quantity }) => {
-    await fetch("http://localhost:5000/api/cart/update", {
-      method: "PUT",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ productId, quantity }),
-    });
-    const res = await fetch("http://localhost:5000/api/cart", {
-      credentials: "include",
-    });
-    const data = await res.json();
-    return data?.items || [];
+    await api.put("/api/cart/update", { productId, quantity });
+    const res = await api.get("/api/cart");
+    return res.data?.items || [];
   }
 );
 
@@ -49,17 +31,9 @@ export const updateItem = createAsyncThunk(
 export const removeItem = createAsyncThunk(
   "cart/removeItem",
   async (productId) => {
-    await fetch("http://localhost:5000/api/cart/remove", {
-      method: "DELETE",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ productId }),
-    });
-    const res = await fetch("http://localhost:5000/api/cart", {
-      credentials: "include",
-    });
-    const data = await res.json();
-    return data?.items || [];
+    await api.delete("/api/cart/remove", { data: { productId } });
+    const res = await api.get("/api/cart");
+    return res.data?.items || [];
   }
 );
 

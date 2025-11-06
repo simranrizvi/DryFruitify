@@ -1,36 +1,40 @@
 // app/product/page.jsx
 import Link from "next/link";
 import ProductCard from "../components/ProductCard";
+import api from "@/src/app/lib/axios"; // ✅ centralized axios instance
 
 // 🟢 Fetch products (with filters)
-async function getProducts(keyword = "", category = "", minPrice = "", maxPrice = "") {
+async function getProducts(
+  keyword = "",
+  category = "",
+  minPrice = "",
+  maxPrice = ""
+) {
   let query = "";
   if (keyword) query += `keyword=${keyword}`;
-  if (category) query += query ? `&category=${category}` : `category=${category}`;
-  if (minPrice) query += query ? `&minPrice=${minPrice}` : `minPrice=${minPrice}`;
-  if (maxPrice) query += query ? `&maxPrice=${maxPrice}` : `maxPrice=${maxPrice}`;
+  if (category)
+    query += query ? `&category=${category}` : `category=${category}`;
+  if (minPrice)
+    query += query ? `&minPrice=${minPrice}` : `minPrice=${minPrice}`;
+  if (maxPrice)
+    query += query ? `&maxPrice=${maxPrice}` : `maxPrice=${maxPrice}`;
 
-  const res = await fetch(
-    `http://localhost:5000/api/products${query ? "?" + query : ""}`,
-    { cache: "no-store" }
-  );
-
-  if (!res.ok) {
+  try {
+    const res = await api.get(`/api/products${query ? "?" + query : ""}`);
+    return res.data;
+  } catch (err) {
     throw new Error("Failed to fetch products");
   }
-  return res.json();
 }
 
 // 🟢 Fetch categories
 async function getCategories() {
-  const res = await fetch("http://localhost:5000/api/products/categories", {
-    cache: "no-store",
-  });
-
-  if (!res.ok) {
+  try {
+    const res = await api.get("/api/products/categories");
+    return res.data;
+  } catch (err) {
     throw new Error("Failed to fetch categories");
   }
-  return res.json();
 }
 
 export default async function ProductPage({ searchParams }) {
@@ -65,34 +69,32 @@ export default async function ProductPage({ searchParams }) {
       <div className="min-h-screen w-[90%] mx-auto py-12 flex flex-col md:flex-row gap-10">
         {/* LEFT - Filters */}
         <div className="md:w-1/4 w-full space-y-8">
-          {/* 🔍 Search Box (Top) */}
-         {/* 🔍 Search Box (Top) */}
-<div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100">
-  <h2 className="font-bold mb-6 text-lg text-gray-800 flex items-center gap-2">
-    <span className="w-1.5 h-6 bg-amber-400 rounded-full"></span>
-    Search
-  </h2>
-  <form action="/product" method="GET" className="flex">
-    <input type="hidden" name="category" value={category} />
-    <input type="hidden" name="minPrice" value={minPrice} />
-    <input type="hidden" name="maxPrice" value={maxPrice} />
+          {/* 🔍 Search Box */}
+          <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100">
+            <h2 className="font-bold mb-6 text-lg text-gray-800 flex items-center gap-2">
+              <span className="w-1.5 h-6 bg-amber-400 rounded-full"></span>
+              Search
+            </h2>
+            <form action="/product" method="GET" className="flex">
+              <input type="hidden" name="category" value={category} />
+              <input type="hidden" name="minPrice" value={minPrice} />
+              <input type="hidden" name="maxPrice" value={maxPrice} />
 
-    <input
-      type="text"
-      name="keyword"
-      defaultValue={keyword}
-      placeholder="Search products..."
-      className="flex-1 px-2 py-2 border border-gray-300 rounded-l-xl focus:ring-2 focus:ring-amber-400 outline-none text-sm"
-    />
-    <button
-      type="submit"
-      className="px-4 py-2 bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-500 hover:to-yellow-600 text-white rounded-r-xl font-semibold text-sm shadow-md transition-transform hover:scale-105"
-    >
-      Search
-    </button>
-  </form>
-</div>
-
+              <input
+                type="text"
+                name="keyword"
+                defaultValue={keyword}
+                placeholder="Search products..."
+                className="flex-1 px-2 py-2 border border-gray-300 rounded-l-xl focus:ring-2 focus:ring-amber-400 outline-none text-sm"
+              />
+              <button
+                type="submit"
+                className="px-4 py-2 bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-500 hover:to-yellow-600 text-white rounded-r-xl font-semibold text-sm shadow-md transition-transform hover:scale-105"
+              >
+                Search
+              </button>
+            </form>
+          </div>
 
           {/* 🟡 Category Filter */}
           <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100">
@@ -137,7 +139,11 @@ export default async function ProductPage({ searchParams }) {
               <span className="w-1.5 h-6 bg-amber-400 rounded-full"></span>
               Price Range
             </h2>
-            <form action="/product" method="GET" className="flex flex-col gap-4">
+            <form
+              action="/product"
+              method="GET"
+              className="flex flex-col gap-4"
+            >
               <input type="hidden" name="keyword" value={keyword} />
               <input type="hidden" name="category" value={category} />
 
@@ -169,14 +175,11 @@ export default async function ProductPage({ searchParams }) {
 
         {/* RIGHT - Products */}
         <div className="md:w-3/4 w-full">
-
-          {/* Agar category selected hai to heading show kare */}
-  {category && (
-    <h2 className="text-2xl font-bold text-gray-800 mb-6">
-      {category} Products
-    </h2>
-  )}
-          {/* Product Grid */}
+          {category && (
+            <h2 className="text-2xl font-bold text-gray-800 mb-6">
+              {category} Products
+            </h2>
+          )}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {products.length > 0 ? (
               products.map((product) => (
