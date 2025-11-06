@@ -4,26 +4,50 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { FiX } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   fetchCart,
   updateItem,
   removeItem,
-} from "@/src/features/cart/cartSlice"; // ✅ Redux actions import
+} from "@/src/features/cart/cartSlice";
+import { checkAuth } from "@/src/features/auth/authSlice";
 
 export default function CartPage() {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  // ✅ Redux state se cart items lao
+  const { isLoggedIn, authCheckCompleted } = useSelector((state) => state.auth);
   const cart = useSelector((state) => state.cart.items);
 
-  // ✅ Component mount hone pe cart fetch karo
-  useEffect(() => {
-    dispatch(fetchCart());
-  }, [dispatch]);
+  const [loading, setLoading] = useState(true);
 
-  // ✅ Total calculate karo safely
+  // ✅ Run checkAuth first, then fetch cart
+  useEffect(() => {
+    const loadData = async () => {
+      const result = await dispatch(checkAuth());
+      if (result.meta.requestStatus === "fulfilled") {
+        await dispatch(fetchCart());
+      } else {
+        router.push("/login");
+      }
+      setLoading(false);
+    };
+    loadData();
+  }, [dispatch, router]);
+
+  if (loading || !authCheckCompleted) {
+    return (
+      <div className="flex justify-center items-center h-screen text-lg text-gray-600">
+        Loading your cart...
+      </div>
+    );
+  }
+
+  if (!isLoggedIn) {
+    router.push("/login");
+    return null;
+  }
+
   const grandTotal = cart.reduce(
     (acc, item) => acc + (item.product?.price || 0) * (item.quantity || 0),
     0
@@ -62,12 +86,15 @@ export default function CartPage() {
                   transition={{ duration: 0.3, delay: index * 0.05 }}
                   className="border-b hover:bg-gray-50"
                 >
-                  {/* Item */}
                   <td className="py-3 px-4">
                     <div className="flex items-center gap-4">
                       {item.product?.image ? (
                         <img
-                          src={`http://localhost:5000${item.product.image}`}
+                          src={
+                            item.product.image.startsWith("http")
+                              ? item.product.image
+                              : `https://khalista.onrender.com${item.product.image}`
+                          }
                           alt={item.product?.name || "Product"}
                           className="w-16 h-16 object-cover rounded"
                         />
@@ -87,12 +114,10 @@ export default function CartPage() {
                     </div>
                   </td>
 
-                  {/* Price */}
                   <td className="py-3 px-4 text-center">
                     ${item.product?.price?.toFixed(2) || "0.00"}
                   </td>
 
-                  {/* Quantity */}
                   <td className="py-3 px-4 text-center">
                     <div className="flex items-center justify-center gap-2">
                       <button
@@ -126,15 +151,11 @@ export default function CartPage() {
                     </div>
                   </td>
 
-                  {/* Total */}
                   <td className="py-3 px-4 text-center">
                     $
-                    {(
-                      (item.product?.price || 0) * (item.quantity || 0)
-                    ).toFixed(2)}
+                    {(item.product?.price || 0 * item.quantity || 0).toFixed(2)}
                   </td>
 
-                  {/* Remove */}
                   <td className="py-3 px-4 text-center">
                     <button
                       onClick={() => dispatch(removeItem(item.product?._id))}
@@ -148,7 +169,6 @@ export default function CartPage() {
             </tbody>
           </table>
 
-          {/* Total */}
           <div className="flex flex-col justify-end mt-6 items-end gap-6">
             <div className="text-xl font-bold">
               Grand Total: Rs {grandTotal.toFixed(2)}
