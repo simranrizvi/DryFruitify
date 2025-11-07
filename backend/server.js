@@ -23,11 +23,10 @@ const __dirname = path.dirname(__filename);
 
 // ✅ Allowed Origins (localhost + future frontend deploy)
 const allowedOrigins = [
-
   "http://localhost:3000", // local
-  "https://khalista-natural.vercel.app", // production
-  "https://khalista-natural-8v2aj0069-imrans-projects-91b0c78b.vercel.app", // preview
-]
+  "https://khalistanatural.vercel.app",
+  "https://khalistanatural-45txmpury-imrans-projects-91b0c78b.vercel.app"
+];
 
 // ✅ CORS config
 app.use(
