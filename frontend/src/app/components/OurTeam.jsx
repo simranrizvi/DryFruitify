@@ -8,12 +8,20 @@ const OurTeam = () => {
   // Card animation variants with left/right effect
   const cardVariantsLeft = {
     hidden: { opacity: 0, x: -100 },
-    visible: { opacity: 1, x: 0, transition: { duration: 0.8, ease: "easeOut" } },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: { duration: 0.8, ease: "easeOut" },
+    },
   };
 
   const cardVariantsRight = {
     hidden: { opacity: 0, x: 100 },
-    visible: { opacity: 1, x: 0, transition: { duration: 0.8, ease: "easeOut" } },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: { duration: 0.8, ease: "easeOut" },
+    },
   };
 
   // Stagger container for multiple cards
@@ -60,7 +68,10 @@ const OurTeam = () => {
           <motion.div
             className="max-w-[248px] flex flex-col items-center bg-white border-2 border-amber-300"
             variants={cardVariantsLeft}
-            whileHover={{ scale: 1.05, boxShadow: "0px 15px 25px rgba(0,0,0,0.25)" }}
+            whileHover={{
+              scale: 1.05,
+              boxShadow: "0px 15px 25px rgba(0,0,0,0.25)",
+            }}
             transition={{ type: "spring", stiffness: 250 }}
           >
             <div className="bg-amber-400 w-full h-60 flex justify-center items-center">
@@ -73,7 +84,9 @@ const OurTeam = () => {
               />
             </div>
             <div className="w-60 flex flex-col justify-center items-center my-7">
-              <h2 className="font-bold text-[30px] text-amber-700 mb-5">Syeda Maheen</h2>
+              <h2 className="font-bold text-[30px] text-amber-700 mb-5">
+                Syeda Maheen
+              </h2>
               <p>Markeeting Head</p>
               <div className="flex gap-4 text-2xl text-amber-700 mt-4">
                 <FaFacebook className="hover:text-blue-600 cursor-pointer" />
@@ -87,7 +100,10 @@ const OurTeam = () => {
           <motion.div
             className="max-w-[248px] flex flex-col items-center bg-white border-2 border-amber-300"
             variants={cardVariantsLeft}
-            whileHover={{ scale: 1.05, boxShadow: "0px 15px 25px rgba(0,0,0,0.25)" }}
+            whileHover={{
+              scale: 1.05,
+              boxShadow: "0px 15px 25px rgba(0,0,0,0.25)",
+            }}
             transition={{ type: "spring", stiffness: 250 }}
           >
             <div className="bg-amber-400 w-full h-60 flex justify-center items-center">
@@ -100,7 +116,9 @@ const OurTeam = () => {
               />
             </div>
             <div className="w-60 flex flex-col justify-center items-center my-7">
-              <h2 className="font-bold text-[30px] text-amber-700 mb-5">Syed MUhammad Imran</h2>
+              <h2 className="font-bold text-[30px] text-amber-700 mb-5">
+                Syed MUhammad Imran
+              </h2>
               <p>Manager</p>
               <div className="flex gap-4 text-2xl text-amber-700 mt-4">
                 <FaFacebook className="hover:text-blue-600 cursor-pointer" />
@@ -114,7 +132,10 @@ const OurTeam = () => {
           <motion.div
             className="max-w-[248px] flex flex-col items-center bg-white border-2 border-amber-300"
             variants={cardVariantsRight}
-            whileHover={{ scale: 1.05, boxShadow: "0px 15px 25px rgba(0,0,0,0.25)" }}
+            whileHover={{
+              scale: 1.05,
+              boxShadow: "0px 15px 25px rgba(0,0,0,0.25)",
+            }}
             transition={{ type: "spring", stiffness: 250 }}
           >
             <div className="bg-amber-400 w-full h-60 flex justify-center items-center">
@@ -127,7 +148,9 @@ const OurTeam = () => {
               />
             </div>
             <div className="w-60 flex flex-col justify-center items-center my-7">
-              <h2 className="font-bold text-[30px] text-amber-700 mb-5">Syed Hasnain</h2>
+              <h2 className="font-bold text-[30px] text-amber-700 mb-5">
+                Syed Hasnain
+              </h2>
               <p>Product Manager</p>
               <div className="flex gap-4 text-2xl text-amber-700 mt-4">
                 <FaFacebook className="hover:text-blue-600 cursor-pointer" />
@@ -141,7 +164,10 @@ const OurTeam = () => {
           <motion.div
             className="max-w-[248px] flex flex-col items-center bg-white border-2 border-amber-300"
             variants={cardVariantsRight}
-            whileHover={{ scale: 1.05, boxShadow: "0px 15px 25px rgba(0,0,0,0.25)" }}
+            whileHover={{
+              scale: 1.05,
+              boxShadow: "0px 15px 25px rgba(0,0,0,0.25)",
+            }}
             transition={{ type: "spring", stiffness: 250 }}
           >
             <div className="bg-amber-400 w-full h-60 flex justify-center items-center">
@@ -154,7 +180,9 @@ const OurTeam = () => {
               />
             </div>
             <div className="w-60 flex flex-col justify-center items-center my-7">
-              <h2 className="font-bold text-[30px] text-amber-700 mb-5">Muhammad Ali </h2>
+              <h2 className="font-bold text-[30px] text-amber-700 mb-5">
+                Muhammad Ali{" "}
+              </h2>
               <p>customer Support</p>
               <div className="flex gap-4 text-2xl text-amber-700 mt-4">
                 <FaFacebook className="hover:text-blue-600 cursor-pointer" />
