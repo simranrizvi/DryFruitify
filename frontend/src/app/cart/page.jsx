@@ -21,20 +21,26 @@ export default function CartPage() {
 
   const [loading, setLoading] = useState(true);
 
-  // ✅ Run checkAuth first, then fetch cart
+  // ✅ Step 1: Auth check + fetch cart
   useEffect(() => {
     const loadData = async () => {
       const result = await dispatch(checkAuth());
       if (result.meta.requestStatus === "fulfilled") {
         await dispatch(fetchCart());
-      } else {
-        router.push("/login");
       }
       setLoading(false);
     };
     loadData();
-  }, [dispatch, router]);
+  }, [dispatch]);
 
+  // ✅ Step 2: Redirect ONLY after auth check done
+  useEffect(() => {
+    if (authCheckCompleted && !isLoggedIn) {
+      router.push("/login");
+    }
+  }, [authCheckCompleted, isLoggedIn, router]);
+
+  // ✅ Step 3: Show loading UI until auth check finishes
   if (loading || !authCheckCompleted) {
     return (
       <div className="flex justify-center items-center h-screen text-lg text-gray-600">
@@ -43,11 +49,10 @@ export default function CartPage() {
     );
   }
 
-  if (!isLoggedIn) {
-    router.push("/login");
-    return null;
-  }
+  // ✅ Step 4: If not logged in — don't render anything; redirect already triggered
+  if (!isLoggedIn) return null;
 
+  // ✅ Cart total
   const grandTotal = cart.reduce(
     (acc, item) => acc + (item.product?.price || 0) * (item.quantity || 0),
     0
