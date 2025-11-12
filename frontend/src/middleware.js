@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 export function middleware(request) {
-  const token = request.cookies.get("jwt")?.value;
+  const token = request.cookies.get("token")?.value; // ✅ match backend cookie name
 
   if (!token) {
     // Token hi nahi mila → login pe bhej do

@@ -9,10 +9,11 @@ const generateToken = (res, user) => {
     }
   );
 
-  res.cookie("jwt", token, {
+  res.cookie("token", token, {
+    // ✅ FIX: was "jwt"
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production", // ✅ only true on Render
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // ✅ important
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 };
